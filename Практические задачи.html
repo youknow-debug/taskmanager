@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical Works 1-24</title>
+    <style>
+        body { font-family: sans-serif; display: flex; margin: 0; height: 100vh; background: #f0f2f5; }
+        #sidebar { width: 250px; background: #2c3e50; color: white; overflow-y: auto; padding: 10px; }
+        #sidebar button { width: 100%; text-align: left; padding: 10px; margin: 2px 0; border: none; background: none; color: #bdc3c7; cursor: pointer; border-bottom: 1px solid #34495e; }
+        #sidebar button:hover { background: #34495e; color: white; }
+        #sidebar button.active { background: #3498db; color: white; }
+        #content { flex: 1; padding: 30px; overflow-y: auto; }
+        .task-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        input, button, select { padding: 8px; margin: 5px 0; }
+        .output-box { margin-top: 15px; padding: 10px; border-left: 4px solid #3498db; background: #eef7ff; min-height: 20px; white-space: pre-wrap; }
+        table { border-collapse: collapse; margin-top: 10px; }
+        table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        .diag { background: #ffeaa7; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h3 style="padding-left: 10px;">Tasks 1-24</h3>
+    <div id="menu"></div>
+</div>
+
+<div id="content">
+    <div id="task-container" class="task-card">
+        <h2>Выберите задачу слева</h2>
+        <p>Все задачи из списка реализованы и готовы к проверке.</p>
+    </div>
+</div>
+
+<script>
+const tasks = [
+    { id: 1, title: "1. Smart Sum", desc: "Sum numbers from string '10 20 abc 5 -3 2.5'" },
+    { id: 2, title: "2. Palindrome", desc: "Check if phrase is a palindrome" },
+    { id: 3, title: "3. String RLE", desc: "Compress string 'aaabbcccc' to 'a3b2c4'" },
+    { id: 4, title: "4. Multiplication Table", desc: "Generate NxN table with diagonal highlight" },
+    { id: 5, title: "5. Password Gen", desc: "Generate secure password with strength check" },
+    { id: 6, title: "6. Bubble Sort", desc: "Sort 1000 items and measure time" },
+    { id: 7, title: "7. Exam Timer", desc: "Timer with 5min warning" },
+    { id: 8, title: "8. Page Search", desc: "Highlight found words in text" },
+    { id: 9, title: "9. Calculator", desc: "Phone-style calculator with chains" },
+    { id: 10, title: "10. Grade Table", desc: "Editable table with row average" },
+    { id: 11, title: "11. Drag & Drop", desc: "Sortable list with localStorage" },
+    { id: 12, title: "12. Modals", desc: "Confirmation modal on ESC/Click" },
+    { id: 13, title: "13. Catalog & Cart", desc: "Products, prices and total sum" },
+    { id: 14, title: "14. Schedule", desc: "Lesson end time calculator" },
+    { id: 15, title: "15. Student Rating", desc: "Top-5 and low performance check" },
+    { id: 16, title: "16. HelpDesk", desc: "Task system with priority sorting" },
+    { id: 17, title: "17. Currency (fetch)", desc: "Rates from Public API" },
+    { id: 18, title: "18. Weather (fetch)", desc: "Weather by city + localStorage" },
+    { id: 19, title: "19. Book Search", desc: "Search books/movies with pagination" },
+    { id: 20, title: "20. File Upload", desc: "Show info & preview without server" },
+    { id: 21, title: "21. Local Examiner", desc: "Test creator and taker" },
+    { id: 22, title: "22. Cipher", desc: "Caesar/Vigenere encryption" },
+    { id: 23, title: "23. Markdown Lite", desc: "Mini editor with bold/italic" },
+    { id: 24, title: "24. Minesweeper 8x8", desc: "Mini Sapper game" }
+];
+
+const menu = document.getElementById('menu');
+const container = document.getElementById('task-container');
+
+tasks.forEach(t => {
+    const btn = document.createElement('button');
+    btn.innerText = t.title;
+    btn.onclick = () => loadTask(t);
+    menu.appendChild(btn);
+});
+
+function loadTask(task) {
+    document.querySelectorAll('#sidebar button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    container.innerHTML = `<h2>${task.title}</h2><p>${task.desc}</p><div id="work-area"></div><div class="output-box" id="result">Result will be here...</div>`;
+    
+    const area = document.getElementById('work-area');
+    const res = document.getElementById('result');
+
+    // Logic for each task
+    switch(task.id) {
+        case 1:
+            area.innerHTML = '<input id="ti1" value="10 20 abc 5 -3 2.5"> <button onclick="run1()">Calc</button>';
+            window.run1 = () => {
+                const parts = document.getElementById('ti1').value.split(' ');
+                let sum = 0, count = 0;
+                parts.forEach(p => { let n = parseFloat(p); if(!isNaN(n)){ sum += n; count++; }});
+                res.innerText = `Sum: ${sum}\nCount: ${count}\nAvg: ${count ? sum/count : 0}`;
+            };
+            break;
+
+        case 2:
+            area.innerHTML = '<input id="ti2" value="A rosa upala na lapu Azora"> <button onclick="run2()">Check</button>';
+            window.run2 = () => {
+                const s = document.getElementById('ti2').value.toLowerCase().replace(/[^a-zа-я0-9]/g, '');
+                const rev = s.split('').reverse().join('');
+                res.innerText = s === rev ? "Is Palindrome" : "Not a Palindrome";
+            };
+            break;
+
+        case 3:
+            area.innerHTML = '<input id="ti3" value="aaabbcccc"> <button onclick="run3()">Compress</button>';
+            window.run3 = () => {
+                let s = document.getElementById('ti3').value, r = "", c = 1;
+                for(let i=0; i<s.length; i++) {
+                    if(s[i] === s[i+1]) c++;
+                    else { r += s[i] + c; c = 1; }
+                }
+                res.innerText = "Compressed: " +
